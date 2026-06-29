@@ -547,8 +547,8 @@ async function sbDelete(tabla,qs){var url=sbBase()+'/rest/v1/'+tabla+'?'+qs;var 
 function pendingCount(){return state.partes.filter(function(p){return !p.synced}).length}
 async function syncPush(){var proyecto=DATA.proyecto;
   var pend=state.partes.filter(function(p){return !p.synced});
-  if(pend.length){var rows=pend.map(function(p){return {client_id:p.client_id,proyecto:proyecto,disciplina:p.disc,supervisor:p.supervisor,cuadrilla:p.cuadrilla,sistema:p.sistema,partida_id:p.id,partida_nombre:p.nombre,fecha:p.fecha,tipo:p.tipo,cant:p.tipo==='cant'?p.cant:null,pct_glb:p.tipo==='glb'?p.pctGlb:null,personal:p.personal||[],incidencia:p.incidencia,obs:p.obs,fotos:(p.fotos||[]).length,fotos_data:(p.fotos||[]),ts:p.ts}});
-    await sbUpsert('partes',rows,'client_id');pend.forEach(function(p){p.synced=true});store.set(KP,state.partes)}
+  if(pend.length){var rows=pend.map(function(p){return {client_id:p.client_id,proyecto:proyecto,disciplina:p.disc,supervisor:p.supervisor,cuadrilla:p.cuadrilla,sistema:p.sistema,partida_id:p.id,partida_nombre:p.nombre,fecha:p.fecha,tipo:p.tipo,cant:p.tipo==='cant'?p.cant:null,pct_glb:p.tipo==='glb'?p.pctGlb:null,personal:p.personal||[],incidencia:p.incidencia,obs:p.obs,fotos:(p.fotos||[]).length,ts:p.ts}});
+    await sbUpsert('partes',rows,'client_id');var fotoRows=[];pend.forEach(function(p){(p.fotos||[]).forEach(function(d,ix){fotoRows.push({foto_id:p.client_id+'_'+ix,client_id:p.client_id,proyecto:proyecto,partida_id:p.id,partida_nombre:p.nombre,disciplina:p.disc,sistema:p.sistema||'',fecha:p.fecha,supervisor:p.supervisor,data:d,ts:p.ts})})});if(fotoRows.length)await sbUpsert('fotos',fotoRows,'foto_id');pend.forEach(function(p){p.synced=true});store.set(KP,state.partes)}
   var mr=Object.keys(state.meta).map(function(id){return {partida_id:id,proyecto:proyecto,unidad:state.meta[id].unidad,total:state.meta[id].total}});
   if(mr.length)await sbUpsert('metrados',mr,'proyecto,partida_id');
   if(state.nuevas.length)await sbUpsert('nuevas',state.nuevas.map(function(n){return {partida_id:n.id,proyecto:proyecto,disciplina:n.esp,cuadrilla:n.cuadrilla,sistema:n.sistema,nombre:n.nombre}}),'proyecto,partida_id');
@@ -558,15 +558,15 @@ async function syncPush(){var proyecto=DATA.proyecto;
   if(ed.length)await sbUpsert('ediciones',ed,'proyecto,partida_id');
   var ri=(state.reinicios||[]).filter(function(r){return !r.synced});
   if(ri.length){for(var i=0;i<ri.length;i++){var rx=ri[i];var qf='proyecto=eq.'+encodeURIComponent(proyecto)+'&partida_id=eq.'+encodeURIComponent(rx.partida_id);
-      await sbDelete('partes',qf);await sbDelete('metrados',qf);await sbDelete('reportabilidad',qf);await sbDelete('ediciones',qf);}
+      await sbDelete('partes',qf);await sbDelete('metrados',qf);await sbDelete('reportabilidad',qf);await sbDelete('ediciones',qf);await sbDelete('fotos',qf);}
     await sbUpsert('reinicios',ri.map(function(r){return {rid:r.rid,proyecto:proyecto,partida_id:r.partida_id,partida_nombre:r.partida_nombre,disciplina:r.disciplina,motivo:r.motivo,quien:r.quien,fecha:r.fecha,ts:r.ts}}),'rid');
     ri.forEach(function(r){r.synced=true});store.set(KX,state.reinicios)}}
 async function syncPull(){var pf='proyecto=eq.'+encodeURIComponent(DATA.proyecto);
-  var res=await Promise.all([sbSelect('partes','select=*&'+pf),sbSelect('metrados','select=*&'+pf),sbSelect('nuevas','select=*&'+pf),sbSelect('reportabilidad','select=*&'+pf),sbSelect('reinicios','select=*&'+pf).catch(function(){return []}),sbSelect('ediciones','select=*&'+pf).catch(function(){return []})]);
-  var P=res[0],M=res[1],N=res[2],R=res[3],RI=res[4],ED=res[5];
+  var res=await Promise.all([sbSelect('partes','select=*&'+pf),sbSelect('metrados','select=*&'+pf),sbSelect('nuevas','select=*&'+pf),sbSelect('reportabilidad','select=*&'+pf),sbSelect('reinicios','select=*&'+pf).catch(function(){return []}),sbSelect('ediciones','select=*&'+pf).catch(function(){return []}),sbSelect('fotos','select=*&'+pf).catch(function(){return []})]);
+  var P=res[0],M=res[1],N=res[2],R=res[3],RI=res[4],ED=res[5],FT=res[6];var FMAP={};(FT||[]).slice().sort(function(a,b){return a.foto_id<b.foto_id?-1:1}).forEach(function(f){(FMAP[f.client_id]=FMAP[f.client_id]||[]).push(f.data)});
   var idx={};state.partes.forEach(function(p){idx[p.client_id]=p});
   var map={};state.partes.filter(function(p){return !p.synced}).forEach(function(p){map[p.client_id]=p});
-  P.forEach(function(r){var prev=idx[r.client_id];map[r.client_id]={client_id:r.client_id,id:r.partida_id,nombre:r.partida_nombre,disc:r.disciplina,supervisor:r.supervisor,cuadrilla:r.cuadrilla,sistema:r.sistema,fecha:r.fecha,tipo:r.tipo,cant:r.cant==null?undefined:Number(r.cant),pctGlb:r.pct_glb==null?undefined:Number(r.pct_glb),personal:r.personal||[],incidencia:r.incidencia,obs:r.obs,fotos:(r.fotos_data&&r.fotos_data.length)?r.fotos_data:((prev&&prev.fotos)?prev.fotos:[]),ts:Number(r.ts),synced:true}});
+  P.forEach(function(r){var prev=idx[r.client_id];map[r.client_id]={client_id:r.client_id,id:r.partida_id,nombre:r.partida_nombre,disc:r.disciplina,supervisor:r.supervisor,cuadrilla:r.cuadrilla,sistema:r.sistema,fecha:r.fecha,tipo:r.tipo,cant:r.cant==null?undefined:Number(r.cant),pctGlb:r.pct_glb==null?undefined:Number(r.pct_glb),personal:r.personal||[],incidencia:r.incidencia,obs:r.obs,fotos:(FMAP[r.client_id]&&FMAP[r.client_id].length)?FMAP[r.client_id]:((r.fotos_data&&r.fotos_data.length)?r.fotos_data:((prev&&prev.fotos)?prev.fotos:[])),ts:Number(r.ts),synced:true}});
   state.partes=Object.keys(map).map(function(k){return map[k]});store.set(KP,state.partes);
   var meta={};M.forEach(function(r){meta[r.partida_id]={unidad:r.unidad,total:Number(r.total)}});state.meta=meta;store.set(KM,state.meta);
   state.nuevas=N.map(function(r){return {id:r.partida_id,nombre:r.nombre,esp:r.disciplina,cuadrilla:r.cuadrilla,sistema:r.sistema,inicio:'',fin:'',ini:0,plan:0,nueva:true}});store.set(KN,state.nuevas);
@@ -624,7 +624,7 @@ async function confirmEliminar(p){var id=p.id,proyecto=DATA.proyecto;
   if(state.edits){delete state.edits[id];store.set(KE,state.edits)}
   if(!$('scrList').classList.contains('hidden'))renderList();toast('Actividad eliminada');
   try{if(sbReady()&&navigator.onLine){var qf='proyecto=eq.'+encodeURIComponent(proyecto)+'&partida_id=eq.'+encodeURIComponent(id);
-    await sbDelete('partes',qf);await sbDelete('metrados',qf);await sbDelete('reportabilidad',qf);await sbDelete('ediciones',qf);await sbDelete('nuevas',qf);}}catch(e){}
+    await sbDelete('partes',qf);await sbDelete('metrados',qf);await sbDelete('reportabilidad',qf);await sbDelete('ediciones',qf);await sbDelete('nuevas',qf);await sbDelete('fotos',qf);}}catch(e){}
   syncNow(true)}
 // selector de disciplina (desplegable)
 $('dDisc').onclick=function(e){e.stopPropagation();$('discMenu').classList.toggle('hidden')};
