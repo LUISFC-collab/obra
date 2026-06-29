@@ -278,7 +278,7 @@ let state={user:store.get(KU)||null,partes:store.get(KP)||[],nuevas:store.get(KN
    La URL ya está lista. Solo reemplaza el texto entre comillas de SUPA_KEY_DEFAULT
    por tu anon key (Supabase -> Project Settings -> API -> anon public). */
 const SUPA_URL_DEFAULT="https://tmgyuwsxpqybdexhoupl.supabase.co";
-const SUPA_KEY_DEFAULT="__PEGA_TU_ANON_KEY_AQUI__";
+const SUPA_KEY_DEFAULT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtZ3l1d3N4cHF5YmRleGhvdXBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3MzU5MDcsImV4cCI6MjA5ODMxMTkwN30.95s31uMfbgqZayvyjE--G10JToFJjaSHUHWQ1HfYnBs";
 /* ============================================== */
 if(!state.cfg.supaUrl && SUPA_KEY_DEFAULT.indexOf("PEGA_TU_ANON")===-1){state.cfg.supaUrl=SUPA_URL_DEFAULT;state.cfg.supaKey=SUPA_KEY_DEFAULT;store.set(KC,state.cfg);}
 let selDisc=null,openSys={},regId=null,regInc='Ninguna',regFotos=[],regPer=[],selDate=null,activeDate=null,metId=null,metUnit=null,metThen=false;
