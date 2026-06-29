@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3864">
+<title>Parte de obra — Water Transition II</title>
+<style>
+  :root{--brand:#1F3864;--brand2:#2E5496;--accent:#E8821A;--accent-d:#C76C0C;--bg:#EDF1F7;--card:#FFFFFF;
+    --ink:#1B2433;--muted:#5C6779;--line:#D9E0EC;--done:#1E9E75;--prog:#E8821A;--todo:#9AA3B2;
+    --danger:#D8442F;--danger-bg:#FBE7E3;--warn-bg:#FCEFD9;--done-bg:#E1F4EC;--teal:#0E7C86;--teal-bg:#DDF0F1;--green:#16A34A;--green-bg:#DEF3E4}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#C7CFDD;color:var(--ink);font-size:16px;line-height:1.45;display:flex;justify-content:center;min-height:100vh}
+  .phone{width:100%;max-width:440px;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,0,0,.25)}
+  .tnum{font-variant-numeric:tabular-nums}
+  button{font-family:inherit;font-size:16px;cursor:pointer;border:none}
+  input,select,textarea{font-family:inherit;font-size:16px;width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand2)}
+  label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin:0 0 5px}
+  .field{margin-bottom:14px}
+  header{background:var(--brand);color:#fff;padding:14px 16px;padding-top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:20}
+  header .proj{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#AEC2E6}
+  header h1{font-size:16px;margin:1px 0 0;font-weight:600}
+  header .who{font-size:12px;color:#C9D6EE;margin-top:1px}
+  header .spacer{flex:1}
+  .iconbtn{background:rgba(255,255,255,.12);color:#fff;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center}
+  .iconbtn:active{background:rgba(255,255,255,.25)}.iconbtn svg{width:20px;height:20px}
+  .scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #scrLogin{padding:22px 18px 30px;display:flex;flex-direction:column;min-height:100%}
+  .hero{margin:8px 0 22px}
+  .hero .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand2);font-weight:700}
+  .hero h2{font-size:26px;line-height:1.15;margin:6px 0 6px;color:var(--brand)}
+  .hero p{margin:0;color:var(--muted);font-size:14px}
+  .disc-grid{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+  .disc{border:1.5px solid var(--line);background:#fff;border-radius:13px;padding:15px 16px;display:flex;align-items:center;gap:13px;transition:.12s}
+  .disc .ic{width:42px;height:42px;border-radius:10px;background:#E8EEF8;display:flex;align-items:center;justify-content:center;color:var(--brand2)}
+  .disc .ic svg{width:22px;height:22px}.disc .nm{font-weight:700;font-size:16px}.disc .sub{font-size:12px;color:var(--muted)}
+  .disc.sel{border-color:var(--brand);background:var(--brand);color:#fff}.disc.sel .sub{color:#C9D6EE}.disc.sel .ic{background:rgba(255,255,255,.16);color:#fff}
+  .btn{height:54px;border-radius:13px;font-weight:700;font-size:17px;width:100%;display:flex;align-items:center;justify-content:center;gap:8px}
+  .btn-primary{background:var(--accent);color:#fff}.btn-primary:active{background:var(--accent-d)}.btn-primary:disabled{background:#CBB89E;color:#fff}
+  .btn-ghost{background:#fff;color:var(--brand);border:1.5px solid var(--line)}.btn-block{margin-top:auto}
+  .sumbar{background:var(--brand2);color:#fff;display:flex;padding:11px 14px;gap:6px}
+  .sumbar .s{flex:1;text-align:center}.sumbar .v{font-size:20px;font-weight:700}.sumbar .k{font-size:11px;color:#CBD9F0}
+  .tools{display:flex;gap:9px;padding:12px 14px 4px}
+  .search{position:relative;flex:1}
+  .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+  .search input{padding-left:36px;height:46px}
+  .toggleall{height:46px;padding:0 12px;border-radius:10px;background:#fff;border:1.5px solid var(--line);color:var(--brand2);font-weight:700;font-size:13px;white-space:nowrap}
+  .list{padding:6px 12px 100px}
+  .wbs-sys{background:#fff;border:1px solid var(--line);border-radius:12px;margin:9px 0 0;overflow:hidden}
+  .wbs-head{display:flex;align-items:center;gap:10px;padding:11px 12px;cursor:pointer}.wbs-head:active{background:#F3F6FB}
+  .wbs-num{font-size:12px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;min-width:18px}
+  .wbs-tt{flex:1;min-width:0}.wbs-tt .nm{font-size:14px;font-weight:700;line-height:1.25}.wbs-tt .mt{font-size:11px;color:var(--muted)}
+  .wbs-roll{text-align:right}.wbs-roll .pc{font-size:14px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums}
+  .wbs-roll .mini{width:54px;height:6px;background:#EAEEF5;border-radius:4px;overflow:hidden;margin-top:3px}.wbs-roll .mini i{display:block;height:100%}
+  .chev{width:18px;height:18px;color:var(--muted);transition:transform .18s}.wbs-sys.open .chev{transform:rotate(90deg)}
+  .wbs-kids{display:none;border-top:1px solid var(--line);background:#FAFBFD}.wbs-sys.open .wbs-kids{display:block}
+  .leaf{display:flex;flex-direction:column;gap:8px;padding:11px 12px 11px 16px;border-bottom:1px solid #EEF1F6;cursor:pointer}
+  .leaf:last-child{border-bottom:none}.leaf:active{background:#F1F5FB}
+  .leaf .lr{display:flex;align-items:flex-start;gap:8px}
+  .lnum{font-size:11px;font-weight:700;color:var(--brand2);font-variant-numeric:tabular-nums;min-width:26px}
+  .cid{font-size:10px;font-weight:700;color:var(--brand2);background:#E8EEF8;border-radius:5px;padding:2px 5px;white-space:nowrap}
+  .cname{font-size:13.5px;font-weight:600;line-height:1.3;flex:1}
+  .cq{font-size:11px;font-weight:700;color:var(--teal);background:var(--teal-bg);border-radius:5px;padding:2px 6px;margin-left:4px;white-space:nowrap}
+  .new-badge{font-size:10px;font-weight:700;color:var(--accent-d);background:var(--warn-bg);border-radius:5px;padding:2px 5px;margin-left:4px;text-transform:uppercase}
+  .chip{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;white-space:nowrap}
+  .chip.done{background:var(--done-bg);color:var(--done)}.chip.prog{background:var(--warn-bg);color:var(--accent-d)}
+  .chip.todo{background:#EEF1F6;color:var(--muted)}.chip.nometa{background:var(--warn-bg);color:var(--accent-d)}
+  .twobar{display:flex;flex-direction:column;gap:3px}
+  .tbrow{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
+  .tbrow .tl{width:62px;flex:none}.tbrow .pbar{flex:1}.tbrow .tv{width:34px;text-align:right;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+  .pbar{height:7px;background:#EAEEF5;border-radius:6px;overflow:hidden}.pbar i{display:block;height:100%;border-radius:6px;transition:width .25s}
+  .pmeta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--muted)}.pmeta .pct{font-weight:700;color:var(--ink);font-size:12.5px}
+  .inc-flag{color:var(--danger);font-weight:700}.cuad-chip{font-size:10px;color:var(--muted);background:#EEF1F6;border-radius:4px;padding:1px 5px}
+  .res-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--danger);margin-left:5px;vertical-align:middle}
+  .empty{text-align:center;color:var(--muted);padding:40px 20px;font-size:14px}
+  .fab{position:absolute;right:16px;bottom:max(18px,env(safe-area-inset-bottom));background:var(--brand);color:#fff;height:52px;border-radius:26px;padding:0 18px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;box-shadow:0 6px 18px rgba(31,56,100,.4);z-index:15}
+  .fab:active{background:var(--brand2)}.fab svg{width:20px;height:20px}
+  .sheet{position:fixed;inset:0;background:rgba(15,22,40,.45);display:none;z-index:40;align-items:flex-end;justify-content:center}.sheet.open{display:flex}
+  .panel{background:var(--bg);width:100%;max-width:440px;border-radius:20px 20px 0 0;max-height:94vh;display:flex;flex-direction:column;animation:up .22s ease}
+  @keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}
+  .phead{display:flex;align-items:flex-start;gap:10px;padding:15px 16px 11px;border-bottom:1px solid var(--line)}
+  .phead .t{flex:1}.phead .t .id{font-size:12px;font-weight:700;color:var(--brand2)}.phead .t .n{font-size:15px;font-weight:600;line-height:1.25}
+  .pbody{padding:16px;overflow-y:auto}
+  .pfoot{padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);display:flex;gap:10px;background:var(--bg)}.pfoot .btn{height:50px;font-size:16px}
+  .x{width:38px;height:38px;border-radius:9px;background:#E7ECF4;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none}
+  .metabox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:14px}
+  .metabox .row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0}.metabox .row b{font-variant-numeric:tabular-nums}.metabox .big{font-size:15px;font-weight:700;color:var(--brand)}
+  .sech{font-size:12px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 8px;display:flex;align-items:center;justify-content:space-between}
+  .datestrip{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 6px;-webkit-overflow-scrolling:touch}
+  .dchip{flex:none;width:52px;border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:7px 0;text-align:center;cursor:pointer}
+  .dchip .wd{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
+  .dchip .dd{font-size:17px;font-weight:800;line-height:1.1}
+  .dchip .rep{font-size:9px;color:var(--teal);font-weight:700;margin-top:1px;height:11px}
+  .dchip.today{border-color:var(--green);background:var(--green-bg)}.dchip.today .wd{color:var(--green)}
+  .dchip.sel{border-color:var(--brand);background:var(--brand);color:#fff}.dchip.sel .wd,.dchip.sel .rep{color:#C9D6EE}
+  .dnote{font-size:12px;color:var(--muted);margin:2px 0 10px}.dnote b{color:var(--green)}
+  .unit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .ubtn{height:52px;border:1.5px solid var(--line);background:#fff;border-radius:11px;font-weight:700;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+  .ubtn .u{font-size:16px}.ubtn .l{font-size:10px;color:var(--muted);font-weight:600}.ubtn.sel{border-color:var(--brand);background:var(--brand);color:#fff}.ubtn.sel .l{color:#C9D6EE}
+  .live{background:var(--teal-bg);border-radius:11px;padding:11px;text-align:center;margin:4px 0 4px}.live b{font-size:28px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums}.live .s{font-size:12px;color:var(--teal);font-weight:600}
+  .glbrow{display:flex;align-items:center;gap:10px;margin:2px 0 4px}
+  .glbrow input[type=number]{width:84px;text-align:center;font-size:20px;font-weight:800;color:var(--brand)}
+  input[type=range]{-webkit-appearance:none;appearance:none;height:10px;border-radius:6px;padding:0;background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--p,0%),#E2E7F0 var(--p,0%));border:none;flex:1}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--accent);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--accent)}
+  .perrow{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .perrow .pt{flex:1}.perrow .pt input{height:42px}
+  .perrow .ptname{flex:1;font-weight:600;font-size:14px;padding:0 2px}
+  .stepper{display:flex;align-items:center;gap:0;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .stepper button{width:40px;height:42px;background:#fff;font-size:22px;font-weight:700;color:var(--brand2)}.stepper button:active{background:var(--brand);color:#fff}
+  .stepper .n{width:40px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+  .perdel{width:38px;height:42px;border-radius:9px;background:var(--danger-bg);color:var(--danger);font-size:18px;flex:none}
+  .addrow{background:#fff;border:1.5px dashed var(--line);color:var(--brand2);font-weight:700;height:44px;border-radius:10px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;font-size:14px}
+  .seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .seg button{flex:1;height:46px;background:#fff;font-weight:700;color:var(--muted);font-size:14px;border-right:1.5px solid var(--line)}.seg button:last-child{border-right:none}
+  .seg button.on[data-v="Ninguna"]{background:#EEF1F6;color:var(--ink)}.seg button.on[data-v="Leve"]{background:var(--warn-bg);color:var(--accent-d)}.seg button.on[data-v="Grave"]{background:var(--danger-bg);color:var(--danger)}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .thumb{width:60px;height:60px;border-radius:9px;background-size:cover;background-position:center;position:relative;border:1px solid var(--line)}
+  .thumb .del{position:absolute;top:-7px;right:-7px;width:22px;height:22px;border-radius:50%;background:var(--danger);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+  .addphoto{width:60px;height:60px;border-radius:9px;border:1.5px dashed var(--line);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--brand2);font-size:10px;font-weight:700;gap:2px}.addphoto svg{width:20px;height:20px}
+  .storebar{height:6px;background:#EAEEF5;border-radius:4px;overflow:hidden;margin-top:8px}.storebar i{display:block;height:100%;background:var(--brand2)}
+  .repcat{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:9px}
+  .repcat .ch{display:flex;align-items:center;justify-content:space-between}
+  .repcat .ch .nm{font-weight:700;font-size:13.5px}
+  .repcat .add{width:30px;height:30px;border-radius:8px;background:var(--brand);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;flex:none}
+  .repitem{display:flex;gap:8px;align-items:flex-start;font-size:13px;padding:7px 0;border-top:1px solid #EEF1F6}
+  .repitem .d{font-size:10px;color:var(--muted);white-space:nowrap}
+  .repitem .tx{flex:1}.repitem .rd{color:var(--danger);font-size:16px;cursor:pointer}
+  .repadd{display:flex;gap:7px;margin-top:8px}.repadd input{height:42px}.repadd button{height:42px;padding:0 14px;border-radius:10px;background:var(--brand);color:#fff;font-weight:700;flex:none}
+  .hist{margin-top:6px}.hist .h{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:14px 0 6px}
+  .hrow{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:7px}
+  .hrow .hv{font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums;white-space:nowrap}.hrow .hm{flex:1;font-size:12px;color:var(--muted)}
+  .hrow .hd{width:30px;height:30px;border-radius:8px;background:var(--danger-bg);color:var(--danger);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+  .expstat{display:flex;gap:9px;margin-bottom:14px}.expstat .b{flex:1;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px;text-align:center}
+  .expstat .b .v{font-size:22px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums}.expstat .b .k{font-size:11px;color:var(--muted)}
+  .hint{font-size:12px;color:var(--muted);margin:2px 0 14px}
+  details{background:#fff;border:1px solid var(--line);border-radius:11px;padding:0 12px;margin-bottom:12px}
+  details summary{font-weight:700;font-size:13px;color:var(--brand2);padding:11px 0;cursor:pointer}
+  details ol{margin:0 0 12px;padding-left:18px;font-size:12.5px;color:var(--muted);line-height:1.6}
+  details code{background:#EEF1F6;border-radius:4px;padding:1px 4px;font-size:11px;word-break:break-all}
+  .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:24px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<noscript><div style="background:#FCEFD9;color:#1F3864;padding:14px 16px;font-family:system-ui,sans-serif;font-size:14px;text-align:center;font-weight:600">Para usar la app ábrela con un navegador (Chrome o Safari).</div></noscript>
+<div class="phone">
+  <div id="scrLogin" class="scroll">
+    <div class="hero"><div class="eyebrow" id="projName">Water Transition II</div><h2>Parte diario de obra</h2><p>Elige tu disciplina para ver y reportar tus actividades.</p></div>
+    <div class="field"><label>Disciplina</label><div class="disc-grid" id="discGrid"></div></div>
+    <div class="field"><label>Tu nombre</label><input id="inSup" placeholder="Nombre del supervisor" autocomplete="name"></div>
+    <button class="btn btn-primary btn-block" id="btnEnter" disabled>Entrar a mis actividades</button>
+  </div>
+
+  <div id="scrDiario" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:100vh">
+    <header>
+      <div><div class="proj" id="dProj">Water Transition II</div><h1 id="dDisc">—</h1><div class="who" id="dSup">—</div></div>
+      <div class="spacer"></div>
+      <button class="iconbtn" id="btnCfg" aria-label="Configurar envío"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 3.6 15H3.5a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 5 9.4l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9.6 3.6V3.5a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1H15a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="iconbtn" id="btnLogout" aria-label="Cambiar usuario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </header>
+    <div class="sumbar"><div class="s"><div class="v tnum" id="dAv">0%</div><div class="k">avance real</div></div><div class="s"><div class="v tnum" id="dDays">0</div><div class="k">días con parte</div></div><div class="s"><div class="v tnum" id="dPend">0</div><div class="k">sin enviar</div></div></div>
+    <div id="syncBar" style="display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:12px;color:var(--muted);background:#fff;border-bottom:1px solid var(--line)"><span id="syncDot" style="width:9px;height:9px;border-radius:50%;background:#9AA3B2;flex:none"></span><span id="syncTxt">Sin configurar</span><span style="flex:1"></span><button id="btnSync" style="background:#E8EEF8;color:var(--brand2);font-weight:700;border-radius:8px;padding:6px 12px;font-size:12px">Sincronizar</button></div>
+    <div style="padding:14px 14px 2px"><h2 style="font-size:15px;margin:0;color:var(--brand)">Mis partes por día</h2><p class="hint" style="margin:4px 0 0">Toca un día para registrar o revisar. La carga a la Sheet es por día.</p></div>
+    <div class="scroll"><div class="list" id="diaList"></div></div>
+  </div>
+
+  <div id="scrList" class="hidden" style="flex:1;display:flex;flex-direction:column;min-height:100vh">
+    <header>
+      <button class="iconbtn" id="btnBack" aria-label="Volver"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div><div class="proj" id="hProj2">—</div><h1 id="hDate">—</h1><div class="who" id="hSup2">—</div></div>
+      <div class="spacer"></div>
+      <button class="iconbtn" id="btnDayLoad" aria-label="Cargar día"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      <button class="iconbtn" id="btnDayRep" aria-label="Reporte del día"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></button>
+    </header>
+    <div class="sumbar"><div class="s"><div class="v tnum" id="sAv">0%</div><div class="k">avance real</div></div><div class="s"><div class="v tnum" id="sTot">0</div><div class="k">actividades</div></div><div class="s"><div class="v tnum" id="sNm">0</div><div class="k">sin metrado</div></div></div>
+    <div class="tools"><div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="inSearch" placeholder="Buscar actividad o código…"></div><button class="toggleall" id="btnAll">Expandir</button></div>
+    <div class="scroll"><div class="list" id="list"></div></div>
+    <button class="fab" id="fabAdd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Añadir</button>
+  </div>
+</div>
+
+<!-- METRADO -->
+<div class="sheet" id="mMet"><div class="panel">
+  <div class="phead"><div class="t"><div class="id" id="metId">—</div><div class="n" id="metName">—</div></div><button class="x" data-close="mMet">×</button></div>
+  <div class="pbody">
+    <p class="hint" id="metIntro">Primero define cómo se mide esta partida.</p>
+    <div class="field"><label>Unidad de medida</label><div class="unit-grid" id="unitGrid"></div></div>
+    <div class="field" id="totWrap"><label>Metrado total (meta)</label><input type="number" id="metTot" min="0" step="any" inputmode="decimal" placeholder="Cantidad total a ejecutar"></div>
+    <div class="field" id="iniWrap"><label>Cantidad ya ejecutada a la fecha (opcional)</label><input type="number" id="metIni" min="0" step="any" inputmode="decimal" placeholder="0"><div class="hint" id="metHint" style="margin:6px 0 0"></div></div>
+  </div>
+  <div class="pfoot"><button class="btn btn-ghost" style="flex:.5" data-close="mMet">Cancelar</button><button class="btn btn-primary" id="metSave">Guardar metrado</button></div>
+</div></div>
+
+<!-- REGISTRAR -->
+<div class="sheet" id="mReg"><div class="panel">
+  <div class="phead"><div class="t"><div class="id" id="rId">—</div><div class="n" id="rName">—</div></div><button class="x" id="rEditMet" style="font-size:16px" aria-label="Editar metrado">✎</button><button class="x" data-close="mReg">×</button></div>
+  <div class="pbody">
+    <div class="twobar" id="rBars"></div>
+    <div class="dnote" id="rDnote" style="margin-top:2px"></div>
+    <div class="metabox" id="rMeta"></div>
+    <div id="rCantBlock">
+      <div class="field"><label id="rCantLbl">Avance del día</label><input type="number" id="rCant" min="0" step="any" inputmode="decimal" placeholder="Cantidad ejecutada"></div>
+      <div class="live" id="rLive"><b class="tnum">0%</b><div class="s">nuevo acumulado</div></div>
+    </div>
+    <div id="rGlbBlock" class="hidden">
+      <label>Avance acumulado (%)</label>
+      <div class="glbrow"><input type="range" id="rRange" min="0" max="100" step="1" value="0"><input type="number" id="rPctNum" min="0" max="100" step="1" value="0" inputmode="numeric"></div>
+    </div>
+    <div class="sech">Personal utilizado</div>
+    <div id="rPersonal"></div>
+    <button type="button" class="addrow" id="rAddPer"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Otro tipo de personal</button>
+    <div class="sech" style="margin-top:18px">Incidencia</div>
+    <div class="seg" id="rSeg"><button data-v="Ninguna" class="on">Ninguna</button><button data-v="Leve">Leve</button><button data-v="Grave">Grave</button></div>
+    <div class="sech">Fotos del trabajo</div>
+    <div class="thumbs" id="rThumbs"></div>
+    <input type="file" id="rFile" accept="image/*" capture="environment" multiple class="hidden">
+    <div class="storebar"><i id="rStore" style="width:0%"></i></div>
+    <div class="hint" id="rStoreTxt" style="margin-top:5px">Almacenamiento del equipo</div>
+    <div class="field" style="margin-top:14px"><label>Observación del día</label><textarea id="rObs" rows="2" placeholder="Comentario (opcional)"></textarea></div>
+    <div class="sech">Reportabilidad</div>
+    <div id="rRepo"></div>
+    <div class="hist" id="rHist"></div>
+  </div>
+  <div class="pfoot"><button class="btn btn-ghost" style="flex:.5" data-close="mReg">Cancelar</button><button class="btn btn-primary" id="rSave">Guardar parte</button></div>
+</div></div>
+
+<!-- AÑADIR -->
+<div class="sheet" id="mAdd"><div class="panel">
+  <div class="phead"><div class="t"><div class="n">Añadir actividad nueva</div></div><button class="x" data-close="mAdd">×</button></div>
+  <div class="pbody">
+    <p class="hint">Para una partida detectada en campo que no está en tu lista. Quedará marcada como nueva.</p>
+    <div class="field"><label>Código / ID</label><input id="aId" placeholder="Ej. M1090 o NUEVA-1"></div>
+    <div class="field"><label>Nombre de la actividad</label><input id="aName" placeholder="Describe la partida"></div>
+    <div class="field"><label>Sistema</label><select id="aSys"></select></div>
+    <div class="field"><label>Cuadrilla</label><select id="aCuad"></select></div>
+  </div>
+  <div class="pfoot"><button class="btn btn-ghost" style="flex:.5" data-close="mAdd">Cancelar</button><button class="btn btn-primary" id="aSave">Añadir a mi lista</button></div>
+</div></div>
+
+<!-- EXPORTAR -->
+<div class="sheet" id="mExp"><div class="panel">
+  <div class="phead"><div class="t"><div class="n">Exportar y sincronizar</div></div><button class="x" data-close="mExp">×</button></div>
+  <div class="pbody">
+    <div class="expstat"><div class="b"><div class="v tnum" id="eN">0</div><div class="k">partes</div></div><div class="b"><div class="v tnum" id="eNew">0</div><div class="k">nuevas</div></div><div class="b"><div class="v tnum" id="eAv">0%</div><div class="k">avance real</div></div></div>
+    <div class="field"><label>URL del proyecto Supabase</label><input id="supaUrl" placeholder="https://xxxxx.supabase.co"></div>
+    <div class="field"><label>Clave pública (anon key)</label><input id="supaKey" placeholder="eyJhbGciOiJI..."></div>
+    <button class="btn btn-primary" id="eSave">Guardar y sincronizar</button><div style="height:10px"></div>
+    <button class="btn btn-ghost" id="eShare">Compartir CSV</button><div style="height:10px"></div>
+    <button class="btn btn-ghost" id="eCsv">Descargar CSV</button>
+    <div class="hint" id="cfgStatus" style="margin-top:12px"></div>
+    <details><summary>¿Cómo conectar Supabase? (una sola vez)</summary><ol><li>Crea un proyecto gratis en supabase.com.</li><li>En <b>SQL Editor</b>, pega y ejecuta el esquema que te dieron.</li><li>En <b>Project Settings → API</b>, copia la <b>URL</b> y la <b>anon key</b>.</li><li>Pégalas arriba y toca Guardar. Los partes se suben solos al tener señal y todos ven lo mismo.</li></ol></details>
+  </div>
+</div></div>
+
+<div class="sheet" id="mRep"><div class="panel">
+  <div class="phead"><div class="t"><div class="n" id="repTitle">Reporte del día</div></div><button class="x" data-close="mRep">×</button></div>
+  <div class="pbody"><pre id="repBody" style="white-space:pre-wrap;font-family:inherit;font-size:13px;margin:0;color:var(--ink);line-height:1.5"></pre></div>
+  <div class="pfoot"><button class="btn btn-ghost" id="repCsv" style="flex:.6">CSV del día</button><button class="btn btn-primary" id="repShare">Compartir reporte</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA={"proyecto": "Water Transition II · Carachugo 1-9", "partidas": [{"id": "M0998", "nombre": "Modificación de tuberías entre bombas", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "M0999", "nombre": "Modificación de tableros eléctricos", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-19", "fin": "2026-06-22", "plan": 75, "ini": 100}, {"id": "M1000", "nombre": "Completar pernos en válvulas y unión a bombas", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-01", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "M1010", "nombre": "Nivelación de bomba por parte de topografía mina", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "", "fin": "2026-06-22", "plan": 100, "ini": 100}, {"id": "M1020", "nombre": "Soldeo de bridas para juntas de expansión", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-23", "fin": "2026-06-23", "plan": 0, "ini": 100}, {"id": "M1030", "nombre": "Completar los niples de descarga", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-18", "fin": "2026-06-30", "plan": 100, "ini": 0}, {"id": "M1031", "nombre": "Completar las descargas de equipos de instrumentación", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-30", "fin": "2026-06-30", "plan": 0, "ini": 0}, {"id": "M1040", "nombre": "Instalación de U Bolts", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-19", "fin": "2026-07-08", "plan": 0, "ini": 0}, {"id": "M1050", "nombre": "Instalación de soportes", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-24", "fin": "2026-07-08", "plan": 0, "ini": 0}, {"id": "M1060", "nombre": "Montaje de motores de bombas e instalación de poleas y fajas", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-09", "fin": "2026-07-09", "plan": 0, "ini": 0}, {"id": "M1070", "nombre": "Pruebas hidrostáticas", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-02", "fin": "2026-07-06", "plan": 0, "ini": 0}, {"id": "M1080", "nombre": "Limpieza de cordón de soldadura para pruebas", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-02", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "A1190", "nombre": "Fabricación, montaje y soldeo de SPOOL en puente de descarga 1 1/4\" a poza", "esp": "Mecánica", "cuadrilla": "Mecánica 1", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-10", "fin": "2026-07-15", "plan": 0, "ini": 0}, {"id": "A1100", "nombre": "Armado y soldeo de Spool de tanque a bomba dosificadora", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-03", "fin": "2026-07-06", "plan": 0, "ini": 0}, {"id": "A1110", "nombre": "Alineamiento de tubería de alimentación de tanque NaOH", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "A1120", "nombre": "Reproceso de armado de tubería de 4\" de descarga (incluye manija)", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "A1130", "nombre": "Limpieza mecánica de tuberías", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-01", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "A1140", "nombre": "Pintado de tuberías", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-02", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "A1150", "nombre": "Taggeado de tuberías", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-02", "fin": "2026-07-03", "plan": 0, "ini": 0}, {"id": "A1160", "nombre": "Completar niples de descarga", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-30", "fin": "2026-06-30", "plan": 0, "ini": 0}, {"id": "A1170", "nombre": "Instalación de soportería entre dosificadora y poza de descarga", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-01", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "M2000", "nombre": "Armado de Spool entre dosificadora y poza de descarga", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-06", "fin": "2026-07-06", "plan": 0, "ini": 0}, {"id": "M2010", "nombre": "Torqueo de elementos (tanque existente NaOH, escalera)", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-26", "fin": "2026-06-26", "plan": 0, "ini": 0}, {"id": "M3020", "nombre": "Habilitación y colocación de isométrico hacia tanque 16005-TK-32002", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-07", "fin": "2026-07-13", "plan": 0, "ini": 0}, {"id": "M3030", "nombre": "Taggeado y colocación de sacos de las líneas", "esp": "Mecánica", "cuadrilla": "Mecánica 2", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-14", "fin": "2026-07-15", "plan": 0, "ini": 0}, {"id": "M3010", "nombre": "Habilitación de soportería de válvulas antes de draga", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-06-25", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "A1179", "nombre": "Fabricación de SKID salida de dragas (taller Cajamarca)", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-06-25", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "A1180", "nombre": "Instalación de SKID salida de dragas", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-08", "fin": "2026-07-10", "plan": 0, "ini": 0}, {"id": "A1181", "nombre": "Armado y soldeo de SPOOL sobre SKID", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-15", "fin": "2026-07-17", "plan": 0, "ini": 0}, {"id": "A1200", "nombre": "TIE IN de línea de 3\" que viene de Pampa Larga", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-07", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "A1210", "nombre": "Instalación de soportes sobre SKID", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-13", "fin": "2026-07-14", "plan": 0, "ini": 0}, {"id": "M3000", "nombre": "Completar la línea de tanque NaOH hasta TIE IN", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-02", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "M3001", "nombre": "Completar la línea de TIE IN a draga", "esp": "Mecánica", "cuadrilla": "Mecánica 3", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-03", "fin": "2026-07-06", "plan": 0, "ini": 0}, {"id": "E1000", "nombre": "Reubicación de cableado y desmontaje de bandeja", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "2026-06-15", "fin": "2026-06-15", "plan": 100, "ini": 100}, {"id": "E1010", "nombre": "Acceso a planta", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "", "fin": "2026-06-25", "plan": 0, "ini": 100}, {"id": "E1020", "nombre": "Identificación de circuitos eléctricos", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "2026-06-25", "fin": "2026-06-26", "plan": 0, "ini": 100}, {"id": "E1030", "nombre": "Megado de conductores eléctricos", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "2026-06-25", "fin": "2026-06-26", "plan": 0, "ini": 100}, {"id": "E1040", "nombre": "Aterramiento de estructuras (soportes)", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "2026-06-22", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "E1050", "nombre": "Aterramiento de bandejas portacables", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "2026-06-19", "fin": "2026-07-09", "plan": 0, "ini": 0}, {"id": "E1070", "nombre": "Habilitación y montaje de bandeja portacables", "esp": "Eléctrica", "cuadrilla": "Eléctrica 1", "sistema": "Partidas generales", "inicio": "2026-07-10", "fin": "2026-07-15", "plan": 0, "ini": 0}, {"id": "E1060", "nombre": "Peinado de cables y tapado de bandeja portacables", "esp": "Eléctrica", "cuadrilla": "Eléctrica 2", "sistema": "Partidas generales", "inicio": "2026-07-08", "fin": "2026-07-14", "plan": 0, "ini": 0}, {"id": "E1100", "nombre": "Tendido de fibra óptica (incluye canalización)", "esp": "Eléctrica", "cuadrilla": "Eléctrica 2", "sistema": "Partidas generales", "inicio": "2026-07-15", "fin": "2026-07-21", "plan": 0, "ini": 0}, {"id": "E2000", "nombre": "Canalización de tubería conduit", "esp": "Eléctrica", "cuadrilla": "Eléctrica 2", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-25", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "E2010", "nombre": "Montaje de soportes para instrumentación", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "E2020", "nombre": "Instalación de tablero variador 16005-PU-32005-VF", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-26", "fin": "2026-06-26", "plan": 0, "ini": 0}, {"id": "E2030", "nombre": "Instalación de tablero 16005-UPS-32001", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-30", "fin": "2026-06-30", "plan": 0, "ini": 0}, {"id": "E2040", "nombre": "Acometida y conexionado de cables en 16005-MC-32001", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-01", "fin": "2026-07-03", "plan": 0, "ini": 0}, {"id": "E2050", "nombre": "Acometida y conexionado de cables en 16005-UPS-32001", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-06", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "E2060", "nombre": "Acometida y conexionado de cables en variador 16005-PU-32005VF", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-08", "fin": "2026-07-09", "plan": 0, "ini": 0}, {"id": "E2070", "nombre": "Cableado de instrumentación en tanque de lodos", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-20", "fin": "2026-07-21", "plan": 0, "ini": 0}, {"id": "E2080", "nombre": "Acometida y conexionado de cables en tablero 16005-RIO-24001", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-13", "fin": "2026-07-17", "plan": 0, "ini": 0}, {"id": "E2090", "nombre": "Instalación de tablero 16005-RIO-24001", "esp": "Eléctrica", "cuadrilla": "Eléctrica 3", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-10", "fin": "2026-07-10", "plan": 0, "ini": 0}, {"id": "E2100", "nombre": "Instalación de botoneras PU-32003/32004/32005MO", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "E2110", "nombre": "Instalación de botonera AG-32002MO", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-26", "fin": "2026-06-26", "plan": 0, "ini": 0}, {"id": "E2120", "nombre": "Cableado hacia bombas PU-32003/32004/32005MO", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-30", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "E2130", "nombre": "Conexionado en bombas PU-32003/32004/32005MO", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-02", "fin": "2026-07-06", "plan": 0, "ini": 0}, {"id": "E2140", "nombre": "Conexionado en agitador AG-32002MO", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-07", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "E2150", "nombre": "Instalación de ZS 16032118", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-08", "fin": "2026-07-08", "plan": 0, "ini": 0}, {"id": "E2160", "nombre": "Instalación de ZS 16032120", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-09", "fin": "2026-07-09", "plan": 0, "ini": 0}, {"id": "E2170", "nombre": "Instalación de LIT 16032104", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-10", "fin": "2026-07-13", "plan": 0, "ini": 0}, {"id": "E2180", "nombre": "Instalación de analizador AIT 16032110", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-14", "fin": "2026-07-15", "plan": 0, "ini": 0}, {"id": "E2190", "nombre": "Instalación de PIT 16032112", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-16", "fin": "2026-07-16", "plan": 0, "ini": 0}, {"id": "E2200", "nombre": "Instalación de PIT 16032116", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-17", "fin": "2026-07-17", "plan": 0, "ini": 0}, {"id": "E2210", "nombre": "Instalación de PIT 16032114", "esp": "Eléctrica", "cuadrilla": "Eléctrica 4", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-20", "fin": "2026-07-20", "plan": 0, "ini": 0}, {"id": "E3000", "nombre": "Canalización de tubería conduit", "esp": "Eléctrica", "cuadrilla": "Eléctrica 5", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-25", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "E4000", "nombre": "Canalización para instrumentación", "esp": "Eléctrica", "cuadrilla": "Eléctrica 5", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-08", "fin": "2026-07-13", "plan": 0, "ini": 0}, {"id": "E4010", "nombre": "Instalación de PIT 16032102", "esp": "Eléctrica", "cuadrilla": "Eléctrica 5", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-17", "fin": "2026-07-17", "plan": 0, "ini": 0}, {"id": "E4020", "nombre": "Instalación de FIT 16032103", "esp": "Eléctrica", "cuadrilla": "Eléctrica 5", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-20", "fin": "2026-07-21", "plan": 0, "ini": 0}, {"id": "E4030", "nombre": "Cableado de instrumentación", "esp": "Eléctrica", "cuadrilla": "Eléctrica 5", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-15", "fin": "2026-07-16", "plan": 0, "ini": 0}, {"id": "E4040", "nombre": "Montaje de soportes para instrumentación", "esp": "Eléctrica", "cuadrilla": "Eléctrica 5", "sistema": "Dragado poza CA 1-8", "inicio": "2026-07-14", "fin": "2026-07-14", "plan": 0, "ini": 0}, {"id": "E1080", "nombre": "Instalación y izaje de pararrayos", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Partidas generales", "inicio": "2026-07-17", "fin": "2026-07-20", "plan": 0, "ini": 0}, {"id": "E1090", "nombre": "Habilitación y montaje de luminarias", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Partidas generales", "inicio": "2026-07-16", "fin": "2026-07-16", "plan": 0, "ini": 0}, {"id": "E3010", "nombre": "Cableado de instrumentación en tanque de NaOH", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-14", "fin": "2026-07-15", "plan": 0, "ini": 0}, {"id": "E3020", "nombre": "Montaje de soportes para instrumentación", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "E3030", "nombre": "Instalación de LIT 16032124", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-02", "fin": "2026-07-03", "plan": 0, "ini": 0}, {"id": "E3040", "nombre": "Instalación de FIT 16032127", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-26", "fin": "2026-06-30", "plan": 0, "ini": 0}, {"id": "E3050", "nombre": "Instalación de LV 16032124", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-06", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "E3060", "nombre": "Instalación de ZS 16032121", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-08", "fin": "2026-07-08", "plan": 0, "ini": 0}, {"id": "E3070", "nombre": "Instalación de ZS 16032118", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-09", "fin": "2026-07-09", "plan": 0, "ini": 0}, {"id": "E3080", "nombre": "Instalación de ZS 16032119", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-10", "fin": "2026-07-10", "plan": 0, "ini": 0}, {"id": "E3090", "nombre": "Instalación de ZS 16032120", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-13", "fin": "2026-07-13", "plan": 0, "ini": 0}, {"id": "E3100", "nombre": "Cableado de comunicación para SKID de dosificación", "esp": "Eléctrica", "cuadrilla": "Eléctrica 6", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-01", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "C0999", "nombre": "Colocación de facilidades", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-06-11", "fin": "2026-06-15", "plan": 100, "ini": 100}, {"id": "C1001", "nombre": "Encofrado de grout para pedestales", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-06-25", "fin": "2026-07-13", "plan": 0, "ini": 70}, {"id": "C1002", "nombre": "Colocación de grout para pedestales", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-06-14", "fin": "2026-07-15", "plan": 0, "ini": 0}, {"id": "C1003", "nombre": "Colocación de grout para pararrayo", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-07-16", "fin": "2026-07-16", "plan": 0, "ini": 0}, {"id": "C1010", "nombre": "Excavación y perfilado para pedestal", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-07-20", "fin": "2026-07-21", "plan": 0, "ini": 100}, {"id": "C1020", "nombre": "Solado para pedestal", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-07-17", "fin": "2026-07-17", "plan": 0, "ini": 0}, {"id": "C1030", "nombre": "Instalación de pedestal y relleno de material", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-07-20", "fin": "2026-07-20", "plan": 0, "ini": 0}, {"id": "C1040", "nombre": "Solaqueo de concreto", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-07-21", "fin": "2026-07-21", "plan": 0, "ini": 0}, {"id": "C1050", "nombre": "Desbaste de concreto (ochavado de pedestales)", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Partidas generales", "inicio": "2026-07-10", "fin": "2026-07-10", "plan": 0, "ini": 80}, {"id": "C2000", "nombre": "Escarificado de pedestales", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 100}, {"id": "C2010", "nombre": "Corte en concreto para juntas de control", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-06-26", "fin": "2026-06-30", "plan": 0, "ini": 0}, {"id": "C2020", "nombre": "Colocación de aditivo en junta de control", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-01", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "C2021", "nombre": "Colocación de aditivo en junta de tanque", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-02", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "C2030", "nombre": "Encofrado de grout para pedestales", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-06", "fin": "2026-07-06", "plan": 0, "ini": 0}, {"id": "C2040", "nombre": "Grout para bases de pedestales o soporterías", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-07", "fin": "2026-07-07", "plan": 0, "ini": 0}, {"id": "C2050", "nombre": "Encofrado grouting epóxico para bombas", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-08", "fin": "2026-07-08", "plan": 0, "ini": 0}, {"id": "C2060", "nombre": "Grouting epóxico para bombas", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-09", "fin": "2026-07-09", "plan": 0, "ini": 0}, {"id": "C2070", "nombre": "Solaqueado de concreto", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Bombeo de lodos PAD-CA1-9", "inicio": "2026-07-03", "fin": "2026-07-03", "plan": 0, "ini": 0}, {"id": "C3030", "nombre": "Corte en concreto para juntas de control", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-23", "fin": "2026-06-24", "plan": 0, "ini": 100}, {"id": "C3040", "nombre": "Colocación de aditivo en juntas de control", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-25", "fin": "2026-06-25", "plan": 0, "ini": 0}, {"id": "C3041", "nombre": "Colocación de aditivo en junta al tanque", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-26", "fin": "2026-06-26", "plan": 0, "ini": 0}, {"id": "C3050", "nombre": "Preparación de superficie de losa existente (limpieza y desbaste)", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-06-30", "fin": "2026-07-01", "plan": 0, "ini": 0}, {"id": "C3060", "nombre": "Encofrado de grout para pedestales", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-02", "fin": "2026-07-02", "plan": 0, "ini": 0}, {"id": "C3070", "nombre": "Colocación de grout para pedestales", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-03", "fin": "2026-07-03", "plan": 0, "ini": 0}, {"id": "C3080", "nombre": "Pintado de concreto en zona de tanque NaOH", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-06", "fin": "2026-07-13", "plan": 0, "ini": 0}, {"id": "C3000", "nombre": "Grouting R500 para canal (resane)", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-16", "fin": "2026-07-17", "plan": 0, "ini": 0}, {"id": "C3010", "nombre": "Corte de juntas de control y colocación de sikaflex", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-14", "fin": "2026-07-14", "plan": 0, "ini": 0}, {"id": "C3020", "nombre": "Sikaflex para ángulo de grating", "esp": "Civil", "cuadrilla": "Civil 1", "sistema": "Dosificación NaOH (pH) CA 1-8", "inicio": "2026-07-15", "fin": "2026-07-15", "plan": 0, "ini": 0}]};
+const UNITS=[{u:"m",l:"metro"},{u:"m²",l:"m. cuadrado"},{u:"m³",l:"m. cúbico"},{u:"und",l:"unidad"},{u:"kg",l:"kilo"},{u:"glb",l:"global"}];
+const PERTIPOS=["Capataz","Operario","Oficial","Ayudante"];
+const REPCATS=[["int","Restricciones internas"],["mina","Restricciones (Mina)"],["seg","Seguimientos"],["com","Comentarios"]];
+const STORE_LIMIT=3.6e6;
+const store=(()=>{let mem={},ok=false;try{localStorage.setItem('_t','1');localStorage.removeItem('_t');ok=true}catch(e){}
+ return{get(k){try{if(ok){const v=localStorage.getItem(k);return v?JSON.parse(v):null}}catch(e){}return(k in mem)?mem[k]:null},
+ set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v));return true}}catch(e){return false}mem[k]=v;return true}}})();
+const KP='sgto4_partes',KN='sgto4_nuevas',KU='sgto4_user',KM='sgto4_meta',KC='sgto4_cfg',KR='sgto4_repo';
+let state={user:store.get(KU)||null,partes:store.get(KP)||[],nuevas:store.get(KN)||[],meta:store.get(KM)||{},cfg:store.get(KC)||{},repo:store.get(KR)||{}};
+let selDisc=null,openSys={},regId=null,regInc='Ninguna',regFotos=[],regPer=[],selDate=null,activeDate=null,metId=null,metUnit=null,metThen=false;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const isoOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayISO=()=>isoOf(new Date());
+const qty=n=>{n=+n;return Number.isInteger(n)?String(n):String(+n.toFixed(2))};
+const WD=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],MO=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function fmtF(iso){const[y,m,d]=iso.split('-').map(Number);const dt=new Date(y,m-1,d);return WD[dt.getDay()]+' '+d+' '+MO[m-1]}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1900)}
+const DISC=["Mecánica","Eléctrica","Civil"];
+const discIcon={"Mecánica":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 3.6 15H3.5a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 5 9.4l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9.6 3.6V3.5a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.51 1H15a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+"Eléctrica":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+"Civil":'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>'};
+
+function acts(d){return DATA.partidas.filter(p=>p.esp===d).concat(state.nuevas.filter(p=>p.esp===d))}
+function partesOf(id){return state.partes.filter(p=>p.id===id).sort((a,b)=>a.ts-b.ts)}
+function metaOf(id){return state.meta[id]||null}
+function acumCant(id){return partesOf(id).filter(p=>p.tipo==='cant').reduce((a,p)=>a+(+p.cant||0),0)}
+function pctOf(p){const m=metaOf(p.id);if(m&&m.unidad==='glb'){const g=partesOf(p.id).filter(x=>x.tipo==='glb');return g.length?g[g.length-1].pctGlb:(p.ini||0)}if(m&&m.total>0)return Math.min(100,Math.round(acumCant(p.id)/m.total*100));if(m)return 0;return p.ini||0}
+function progOf(p){if(p.inicio&&p.fin){const a=new Date(p.inicio),b=new Date(p.fin),h=new Date(todayISO());if(h<=a)return 0;if(h>=b)return 100;return Math.round((h-a)/(b-a)*100)}return p.plan||0}
+function statusOf(p){const m=metaOf(p.id);if(!m&&(p.ini||0)===0)return 'nometa';const v=pctOf(p);return v>=100?'done':(v>0?'prog':(m?'todo':'nometa'))}
+function lbl(s){return s==='done'?'Terminado':s==='prog'?'En curso':s==='nometa'?'Definir metrado':'Sin iniciar'}
+function barCol(s){return s==='done'?'var(--done)':s==='prog'?'var(--prog)':'var(--todo)'}
+function pcCol(v){return barCol(v>=100?'done':v>0?'prog':'todo')}
+function sysOrder(d){const s=[];acts(d).forEach(p=>{if(!s.includes(p.sistema))s.push(p.sistema)});return s}
+function bytesUsed(){try{return JSON.stringify(state.partes).length}catch(e){return 0}}
+
+// login
+function buildDisc(){const g=$('discGrid');g.innerHTML='';DISC.forEach(d=>{const n=DATA.partidas.filter(p=>p.esp===d).length;const b=document.createElement('button');b.type='button';b.className='disc'+(selDisc===d?' sel':'');b.innerHTML='<span class="ic">'+discIcon[d]+'</span><span><span class="nm">'+d+'</span><br><span class="sub">'+n+' actividades</span></span>';b.onclick=()=>{selDisc=d;buildDisc();chkEnter()};g.appendChild(b)})}
+function chkEnter(){$('btnEnter').disabled=!(selDisc&&$('inSup').value.trim())}
+$('inSup').addEventListener('input',chkEnter);
+$('btnEnter').onclick=()=>{state.user={disc:selDisc,supervisor:$('inSup').value.trim()};store.set(KU,state.user);enterApp()};
+function enterApp(){$('scrLogin').classList.add('hidden');showDiario();}
+function showDiario(){$('scrList').classList.add('hidden');$('scrDiario').classList.remove('hidden');$('dProj').textContent=DATA.proyecto.split('·')[0].trim();$('dDisc').textContent=state.user.disc;$('dSup').textContent=state.user.supervisor;renderDiario();updSync();syncNow(true);}
+function dayList(){const set=new Set(myParts().map(p=>p.fecha));set.add(todayISO());return [...set].sort((a,b)=>a<b?1:-1);}
+function partesDia(f){return myParts().filter(p=>p.fecha===f);}
+function sentInfo(f){const ps=partesDia(f);if(!ps.length)return{st:'sin'};return ps.every(p=>p.synced)?{st:'env'}:{st:'pend'};}
+function renderDiario(){
+  const pcts=acts(state.user.disc).map(pctOf);$('dAv').textContent=(pcts.length?Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length):0)+'%';
+  const days=dayList();const wp=days.filter(f=>partesDia(f).length);
+  $('dDays').textContent=wp.length;$('dPend').textContent=wp.filter(f=>['pend','cam'].includes(sentInfo(f).st)).length;
+  const w=$('diaList');w.innerHTML='';
+  const stmap={env:['Enviado ✓','done'],pend:['Pendiente','prog'],cam:['Cambios sin enviar','nometa'],sin:['Sin registros','todo']};
+  days.forEach(f=>{const ps=partesDia(f);const nAct=new Set(ps.map(p=>p.id)).size;const sm=stmap[sentInfo(f).st];const isT=f===todayISO();
+    const card=document.createElement('div');card.className='wbs-sys';card.style.cursor='pointer';
+    card.innerHTML='<div class="wbs-head"><div class="wbs-tt"><div class="nm">'+fmtF(f)+(isT?' · <span style="color:var(--green);font-weight:800">Hoy</span>':'')+'</div><div class="mt">'+(nAct?(nAct+(nAct>1?' actividades reportadas':' actividad reportada')):'Toca para registrar')+'</div></div><span class="chip '+sm[1]+'">'+sm[0]+'</span></div>';
+    if(nAct){const act=document.createElement('div');act.style.cssText='display:flex;gap:8px;padding:0 12px 12px';
+      act.innerHTML='<button class="btn btn-ghost dcarga" style="height:42px;font-size:14px">Sincronizar</button><button class="btn btn-ghost drep" style="height:42px;font-size:14px">Reporte</button>';
+      card.appendChild(act);
+      act.querySelector('.dcarga').onclick=function(e){e.stopPropagation();cargarDia(f);};
+      act.querySelector('.drep').onclick=function(e){e.stopPropagation();reporteDia(f);};}
+    card.onclick=function(){openDay(f);};w.appendChild(card);});
+}
+function openDay(f){activeDate=f;$('scrDiario').classList.add('hidden');$('scrList').classList.remove('hidden');$('hProj2').textContent=DATA.proyecto.split('·')[0].trim();$('hDate').textContent=fmtF(f)+(f===todayISO()?' · Hoy':'');$('hSup2').textContent=state.user.disc+' · '+state.user.supervisor;openSys={};renderList();}
+function backToDiario(){$('scrList').classList.add('hidden');$('scrDiario').classList.remove('hidden');renderDiario();}
+function cargarDia(f){syncNow();}
+function reporteDia(f){const rows=rowsForExport().filter(r=>r.fecha===f);
+  var t='REPORTE DEL DÍA — '+fmtF(f)+'\n'+state.user.disc+' · '+state.user.supervisor+'\n'+DATA.proyecto+'\nActividades: '+new Set(rows.map(r=>r.id)).size+'\n\n';
+  rows.forEach(function(r){t+='• ['+r.id+'] '+r.partida+'\n';t+='   Avance: '+(r.hoy!==''?('+'+r.hoy+' '+r.unidad+' → '+r.pct+'%'):(r.pct+'% (global)'))+'  | Prog '+r.prog+'%\n';if(r.personal)t+='   Personal: '+r.personal+' (total '+r.totalPers+')\n';if(r.incidencia&&r.incidencia!=='Ninguna')t+='   Incidencia: '+r.incidencia+'\n';if(r.fotos)t+='   Fotos: '+r.fotos+'\n';if(r.obs)t+='   Obs: '+r.obs+'\n';if(r.reporte)t+='   Reportabilidad: '+r.reporte+'\n';t+='\n';});
+  if(!rows.length)t+='(sin registros)\n';
+  $('repTitle').textContent='Reporte — '+fmtF(f);$('repBody').textContent=t;
+  $('repShare').onclick=async function(){try{if(navigator.share){await navigator.share({title:'Reporte '+fmtF(f),text:t});return;}}catch(e){}try{await navigator.clipboard.writeText(t);toast('Reporte copiado');}catch(e){toast('Selecciona y copia el texto');}};
+  $('repCsv').onclick=function(){const csv=csvFrom(rows);const b=new Blob([csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='reporte_'+state.user.disc+'_'+f+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),800);toast('CSV del día descargado');};
+  openSheet('mRep');
+}
+
+// list WBS
+function renderList(){
+  const q=$('inSearch').value.trim().toLowerCase();let list=acts(state.user.disc);
+  const pcts=list.map(pctOf);$('sAv').textContent=(pcts.length?Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length):0)+'%';
+  $('sTot').textContent=list.length;$('sNm').textContent=list.filter(p=>!metaOf(p.id)).length;
+  if(q)list=list.filter(p=>p.id.toLowerCase().includes(q)||p.nombre.toLowerCase().includes(q));
+  const wrap=$('list');wrap.innerHTML='';
+  if(!list.length){wrap.innerHTML='<div class="empty">Sin actividades.</div>';return}
+  const order=sysOrder(state.user.disc).filter(s=>list.some(p=>p.sistema===s));
+  order.forEach((sys,si)=>{const items=list.filter(p=>p.sistema===sys);const vs=items.map(pctOf);const roll=vs.length?Math.round(vs.reduce((a,b)=>a+b,0)/vs.length):0;
+    const isOpen=q?true:!!openSys[sys];const sysEl=document.createElement('div');sysEl.className='wbs-sys'+(isOpen?' open':'');
+    const head=document.createElement('div');head.className='wbs-head';
+    head.innerHTML='<span class="wbs-num">'+(si+1)+'</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 6 15 12 9 18"/></svg><div class="wbs-tt"><div class="nm">'+esc(sys)+'</div><div class="mt">'+items.length+' actividades</div></div><div class="wbs-roll"><div class="pc tnum">'+roll+'%</div><div class="mini"><i style="width:'+roll+'%;background:'+pcCol(roll)+'"></i></div></div>';
+    head.onclick=()=>{openSys[sys]=!isOpen;renderList()};
+    const kids=document.createElement('div');kids.className='wbs-kids';items.forEach((p,pi)=>kids.appendChild(leaf(p,(si+1)+'.'+(pi+1))));
+    sysEl.appendChild(head);sysEl.appendChild(kids);wrap.appendChild(sysEl)})}
+function leaf(p,num){const s=statusOf(p),pct=pctOf(p),prog=progOf(p),m=metaOf(p.id),lp=partesOf(p.id).slice(-1)[0];
+  const inc=lp&&lp.incidencia&&lp.incidencia!=='Ninguna';const nres=((state.repo[p.id]||[]).filter(x=>x.cat==='int'||x.cat==='mina')).length;
+  let mt='';if(m){mt=m.unidad==='glb'?'Global':(qty(acumCant(p.id))+' / '+qty(m.total)+' '+m.unidad)}
+  const el=document.createElement('div');el.className='leaf';
+  el.innerHTML='<div class="lr"><span class="lnum">'+num+'</span><span class="cid">'+esc(p.id)+'</span><span class="cname">'+esc(p.nombre)+(p.nueva?'<span class="new-badge">nueva</span>':'')+(m?'<span class="cq">'+esc(mt)+'</span>':'')+(nres?'<span class="res-dot" title="restricciones"></span>':'')+'</span><span class="chip '+s+'">'+lbl(s)+'</span></div>'+
+    '<div class="twobar"><div class="tbrow"><span class="tl">Programado</span><span class="pbar"><i style="width:'+prog+'%;background:var(--brand2)"></i></span><span class="tv">'+prog+'%</span></div>'+
+    '<div class="tbrow"><span class="tl">Real</span><span class="pbar"><i style="width:'+pct+'%;background:'+barCol(s)+'"></i></span><span class="tv">'+pct+'%</span></div></div>'+
+    '<div class="pmeta"><span><span class="cuad-chip">'+esc(p.cuadrilla)+'</span>'+(inc?' · <span class="inc-flag">Incid. '+esc(lp.incidencia)+'</span>':'')+'</span><span class="pct tnum">'+(pct>=prog?'al día':(prog-pct)+'% atrasado')+'</span></div>';
+  el.onclick=()=>{if(!metaOf(p.id))openMetrado(p,true);else openReg(p)};return el}
+$('inSearch').addEventListener('input',renderList);
+$('btnAll').onclick=()=>{const o=sysOrder(state.user.disc);const c=o.some(s=>!openSys[s]);o.forEach(s=>openSys[s]=c);$('btnAll').textContent=c?'Colapsar':'Expandir';renderList()};
+
+// metrado
+function buildUnits(sel){const g=$('unitGrid');g.innerHTML='';UNITS.forEach(x=>{const b=document.createElement('button');b.type='button';b.className='ubtn'+(sel===x.u?' sel':'');b.innerHTML='<span class="u">'+x.u+'</span><span class="l">'+x.l+'</span>';b.onclick=()=>{metUnit=x.u;buildUnits(metUnit);tglTot()};g.appendChild(b)})}
+function tglTot(){const glb=metUnit==='glb';$('totWrap').classList.toggle('hidden',glb);$('iniWrap').classList.toggle('hidden',glb)}
+function openMetrado(p,then){metId=p.id;metThen=!!then;const m=metaOf(p.id);metUnit=m?m.unidad:null;$('metId').textContent=p.id;$('metName').textContent=p.nombre;$('metIntro').textContent=m?'Ajusta la unidad o la meta.':'Primero define cómo se mide esta partida.';buildUnits(metUnit);tglTot();$('metTot').value=m?m.total:'';$('metIni').value='';$('metHint').textContent=p.ini?('El cronograma marca '+p.ini+'% ejecutado.'):'';$('metTot').oninput=()=>{const t=+$('metTot').value;if(p.ini&&t>0&&!$('metIni').value)$('metIni').value=qty(t*p.ini/100)};openSheet('mMet')}
+$('metSave').onclick=()=>{if(!metUnit){toast('Elige una unidad');return}const glb=metUnit==='glb';const tot=glb?100:+$('metTot').value;if(!glb&&(!tot||tot<=0)){toast('Ingresa el metrado total');return}
+  state.meta[metId]={unidad:metUnit,total:tot};store.set(KM,state.meta);const ini=+$('metIni').value;
+  if(!glb&&ini>0){state.partes.push({id:metId,fecha:todayISO(),disc:state.user.disc,supervisor:state.user.supervisor,tipo:'cant',cant:ini,incidencia:'Ninguna',obs:'Avance inicial',personal:[],fotos:[],ts:Date.now(),client_id:uuid(),synced:false});store.set(KP,state.partes)}
+  const p=acts(state.user.disc).find(x=>x.id===metId);closeSheet('mMet');renderList();toast('Metrado guardado ✓');if(metThen&&p)setTimeout(()=>openReg(p),120)};
+
+// fecha activa
+function updDnote(p){$('rDnote').innerHTML='Reportando: <b>'+fmtF(activeDate)+(activeDate===todayISO()?' · disponible hoy':'')+'</b>'+(activeDate!==todayISO()?' — día anterior':'');}
+
+// registrar
+function renderBars(p){const real=pctOf(p),prog=progOf(p);const dif=real-prog;
+  $('rBars').innerHTML='<div class="tbrow"><span class="tl">Programado</span><span class="pbar"><i style="width:'+prog+'%;background:var(--brand2)"></i></span><span class="tv">'+prog+'%</span></div>'+
+    '<div class="tbrow"><span class="tl">Real</span><span class="pbar"><i style="width:'+real+'%;background:'+pcCol(real)+'"></i></span><span class="tv">'+real+'%</span></div>'+
+    '<div class="tbrow"><span class="tl"></span><span style="flex:1;font-weight:700;color:'+(dif>=0?'var(--green)':'var(--danger)')+'">'+(dif>=0?'Al día o adelantado':((prog-real)+'% atrasado')+'')+'</span></div>'}
+function setRange(v){v=Math.max(0,Math.min(100,Math.round(v)));$('rRange').value=v;$('rRange').style.setProperty('--p',v+'%');$('rPctNum').value=v}
+function renderMeta(p){const m=metaOf(p.id);const box=$('rMeta');
+  if(m.unidad==='glb'){box.innerHTML='<div class="row"><span>Tipo</span><b>Global (avance en %)</b></div><div class="row"><span>Avance actual</span><b class="big">'+pctOf(p)+'%</b></div>';
+    $('rCantBlock').classList.add('hidden');$('rGlbBlock').classList.remove('hidden');const g=partesOf(p.id).filter(x=>x.tipo==='glb');setRange(g.length?g[g.length-1].pctGlb:(p.ini||0))}
+  else{const ac=acumCant(p.id);box.innerHTML='<div class="row"><span>Unidad</span><b>'+m.unidad+'</b></div><div class="row"><span>Meta total</span><b>'+qty(m.total)+' '+m.unidad+'</b></div><div class="row"><span>Acumulado histórico</span><b class="big">'+qty(ac)+' '+m.unidad+' · '+pctOf(p)+'%</b></div>';
+    $('rGlbBlock').classList.add('hidden');$('rCantBlock').classList.remove('hidden');$('rCantLbl').textContent='Avance del día ('+m.unidad+')';$('rCant').value='';updLive(p)}}
+function updLive(p){const m=metaOf(p.id);const add=+$('rCant').value||0;const nv=acumCant(p.id)+add;const pc=m.total>0?Math.min(100,Math.round(nv/m.total*100)):0;$('rLive').innerHTML='<b class="tnum">'+pc+'%</b><div class="s">nuevo acumulado: '+qty(nv)+' / '+qty(m.total)+' '+m.unidad+'</div>'}
+function renderPer(){const w=$('rPersonal');w.innerHTML='';regPer.forEach((r,i)=>{const row=document.createElement('div');row.className='perrow';
+  if(r.fixed)row.innerHTML='<div class="ptname">'+r.tipo+'</div>';else row.innerHTML='<div class="pt"><input placeholder="Tipo de personal" value="'+esc(r.tipo)+'" data-i="'+i+'"></div>';
+  row.innerHTML+='<div class="stepper"><button data-m="'+i+'">−</button><span class="n tnum" id="pn'+i+'">'+r.cant+'</span><button data-p="'+i+'">+</button></div>'+(r.fixed?'':'<button class="perdel" data-d="'+i+'">×</button>');
+  w.appendChild(row)});
+  w.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const i=+b.dataset.m;regPer[i].cant=Math.max(0,regPer[i].cant-1);$('pn'+i).textContent=regPer[i].cant});
+  w.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const i=+b.dataset.p;regPer[i].cant++;$('pn'+i).textContent=regPer[i].cant});
+  w.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{regPer.splice(+b.dataset.d,1);renderPer()});
+  w.querySelectorAll('input[data-i]').forEach(inp=>inp.oninput=()=>{regPer[+inp.dataset.i].tipo=inp.value})}
+$('rAddPer').onclick=()=>{regPer.push({tipo:'',cant:1,fixed:false});renderPer()};
+function renderRepo(p){const w=$('rRepo');const items=state.repo[p.id]||[];w.innerHTML='';
+  REPCATS.forEach(([cat,name])=>{const its=items.filter(x=>x.cat===cat);const box=document.createElement('div');box.className='repcat';
+    box.innerHTML='<div class="ch"><span class="nm">'+name+'</span><button class="add" data-cat="'+cat+'">+</button></div>'+
+      its.map(x=>'<div class="repitem"><span class="d">'+x.fecha.slice(5)+'</span><span class="tx">'+esc(x.texto)+'</span><span class="rd" data-ts="'+x.ts+'">×</span></div>').join('')+
+      '<div class="repadd hidden" data-add="'+cat+'"><input placeholder="Escribe aquí…"><button>Agregar</button></div>';
+    w.appendChild(box)});
+  w.querySelectorAll('.add').forEach(b=>b.onclick=()=>{const a=w.querySelector('[data-add="'+b.dataset.cat+'"]');a.classList.toggle('hidden');const inp=a.querySelector('input');if(!a.classList.contains('hidden'))inp.focus();
+    a.querySelector('button').onclick=()=>{const tx=inp.value.trim();if(!tx)return;(state.repo[p.id]=state.repo[p.id]||[]).push({cat:b.dataset.cat,texto:tx,fecha:todayISO(),ts:Date.now()});store.set(KR,state.repo);renderRepo(p)}});
+  w.querySelectorAll('.rd').forEach(b=>b.onclick=()=>{state.repo[p.id]=(state.repo[p.id]||[]).filter(z=>z.ts!=+b.dataset.ts);store.set(KR,state.repo);renderRepo(p)})}
+function updStore(){const u=bytesUsed();const pct=Math.min(100,Math.round(u/STORE_LIMIT*100));$('rStore').style.width=pct+'%';$('rStore').style.background=pct>85?'var(--danger)':'var(--brand2)';$('rStoreTxt').textContent='Almacenamiento del equipo: '+pct+'%'+(pct>85?' — exporta para liberar':'')}
+function renderHist(p){const h=$('rHist');const ps=partesOf(p.id).slice().reverse();if(!ps.length){h.innerHTML='';return}
+  h.innerHTML='<div class="h">Historial (toca ✕ para rectificar)</div>'+ps.map(x=>{const val=x.tipo==='glb'?('→ '+x.pctGlb+'%'):('+'+qty(x.cant)+' '+(metaOf(p.id)?metaOf(p.id).unidad:''));const nf=(x.fotos||[]).length;return '<div class="hrow"><span class="hv">'+val+'</span><span class="hm">'+x.fecha+' · '+esc(x.supervisor||'')+(nf?(' · '+nf+' foto'+(nf>1?'s':'')):'')+(x.incidencia&&x.incidencia!=='Ninguna'?' · '+x.incidencia:'')+'</span><button class="hd" data-ts="'+x.ts+'">×</button></div>'}).join('');
+  h.querySelectorAll('.hd').forEach(b=>b.onclick=()=>{state.partes=state.partes.filter(z=>z.ts!=+b.dataset.ts);store.set(KP,state.partes);renderMeta(p);renderHist(p);renderBars(p);updStore();renderList();toast('Parte eliminado')})}
+function openReg(p){regId=p.id;regInc='Ninguna';regFotos=[];selDate=activeDate;regPer=PERTIPOS.map(t=>({tipo:t,cant:0,fixed:true}));
+  $('rId').textContent=p.id;$('rName').textContent=p.nombre;$('rObs').value='';setInc('Ninguna');
+  renderBars(p);updDnote(p);renderMeta(p);renderPer();renderRepo(p);renderThumbs();updStore();renderHist(p);
+  $('rEditMet').onclick=()=>{closeSheet('mReg');openMetrado(p,true)};openSheet('mReg')}
+$('rCant').addEventListener('input',()=>{const p=acts(state.user.disc).find(x=>x.id===regId);if(p)updLive(p)});
+$('rRange').addEventListener('input',e=>setRange(+e.target.value));
+$('rPctNum').addEventListener('input',e=>setRange(+e.target.value));
+function setInc(v){regInc=v;document.querySelectorAll('#rSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
+document.querySelectorAll('#rSeg button').forEach(b=>b.onclick=()=>setInc(b.dataset.v));
+function renderThumbs(){const t=$('rThumbs');t.innerHTML=regFotos.map((s,i)=>'<div class="thumb" style="background-image:url('+s+')"><span class="del" data-i="'+i+'">×</span></div>').join('')+'<button type="button" class="addphoto" id="addPhoto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Foto</button>';$('addPhoto').onclick=()=>{if(bytesUsed()>STORE_LIMIT){toast('Almacenamiento lleno: exporta para liberar');return}$('rFile').click()};t.querySelectorAll('.del').forEach(b=>b.onclick=()=>{regFotos.splice(+b.dataset.i,1);renderThumbs()})}
+$('rFile').addEventListener('change',async e=>{for(const f of e.target.files){if(bytesUsed()+regFotos.reduce((a,s)=>a+s.length,0)>STORE_LIMIT){toast('Umbral alcanzado: no se agregan más fotos');break}try{regFotos.push(await resize(f))}catch(err){}}e.target.value='';renderThumbs()});
+function resize(file){return new Promise((res,rej)=>{const img=new Image();const url=URL.createObjectURL(file);img.onload=()=>{const max=640;let w=img.width,h=img.height;if(w>h&&w>max){h=h*max/w;w=max}else if(h>max){w=w*max/h;h=max}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);URL.revokeObjectURL(url);res(c.toDataURL('image/jpeg',0.45))};img.onerror=rej;img.src=url})}
+$('rSave').onclick=()=>{const p=acts(state.user.disc).find(x=>x.id===regId);const m=metaOf(regId);
+  const per=regPer.filter(r=>r.cant>0&&r.tipo.trim()).map(r=>({tipo:r.tipo.trim(),cant:r.cant}));
+  const base={id:regId,fecha:selDate||todayISO(),disc:state.user.disc,supervisor:state.user.supervisor,nombre:p?p.nombre:regId,sistema:p?p.sistema:'',cuadrilla:p?p.cuadrilla:'',personal:per,incidencia:regInc,obs:$('rObs').value.trim(),fotos:regFotos.slice(),ts:Date.now(),client_id:uuid(),synced:false};
+  if(m.unidad==='glb'){base.tipo='glb';base.pctGlb=+$('rPctNum').value||0}
+  else{const add=+$('rCant').value;if(!add||add<=0){toast('Ingresa la cantidad ejecutada');return}base.tipo='cant';base.cant=add}
+  state.partes.push(base);if(!store.set(KP,state.partes)){state.partes.pop();toast('Almacenamiento lleno: exporta y libera fotos');return}
+  closeSheet('mReg');renderList();toast('Parte guardado ✓');syncNow(true)};
+
+// añadir
+$('fabAdd').onclick=()=>{const sys=$('aSys');sys.innerHTML='';sysOrder(state.user.disc).concat(['Otro / nuevo sistema']).forEach(s=>{const o=document.createElement('option');o.textContent=s;sys.appendChild(o)});const cu=$('aCuad');cu.innerHTML='';[...new Set(DATA.partidas.filter(p=>p.esp===state.user.disc).map(p=>p.cuadrilla))].concat(['Otra']).forEach(c=>{const o=document.createElement('option');o.textContent=c;cu.appendChild(o)});$('aId').value='NUEVA-'+(state.nuevas.length+1);$('aName').value='';openSheet('mAdd')};
+$('aSave').onclick=()=>{const id=$('aId').value.trim(),name=$('aName').value.trim();if(!id||!name){toast('Completa código y nombre');return}if(acts(state.user.disc).some(p=>p.id.toLowerCase()===id.toLowerCase())){toast('Ya existe ese código');return}state.nuevas.push({id,nombre:name,esp:state.user.disc,cuadrilla:$('aCuad').value,sistema:$('aSys').value,inicio:'',fin:'',ini:0,plan:0,nueva:true});store.set(KN,state.nuevas);closeSheet('mAdd');openSys[$('aSys').value]=true;renderList();toast('Actividad añadida ✓')};
+
+// export
+function myParts(){return state.partes.filter(p=>p.disc===state.user.disc)}
+function perTxt(per){return(per||[]).map(x=>x.tipo+':'+x.cant).join('; ')}
+function perTot(per){return(per||[]).reduce((a,x)=>a+(+x.cant||0),0)}
+function repoTxt(id){return(state.repo[id]||[]).map(x=>{const n={int:'Interna',mina:'Mina',seg:'Seguim.',com:'Coment.'}[x.cat];return '['+n+' '+x.fecha.slice(5)+'] '+x.texto}).join(' | ')}
+function rowsForExport(){const r=[];acts(state.user.disc).forEach(p=>{const m=metaOf(p.id);const prog=progOf(p);const rep=repoTxt(p.id);
+  partesOf(p.id).forEach(x=>{let acum='',pc='';if(x.tipo==='cant'){const up=partesOf(p.id).filter(z=>z.tipo==='cant'&&z.ts<=x.ts).reduce((a,z)=>a+(+z.cant||0),0);acum=up;pc=m&&m.total>0?Math.min(100,Math.round(up/m.total*100)):''}else pc=x.pctGlb;
+    r.push({fecha:x.fecha,disciplina:p.esp,cuadrilla:p.cuadrilla,sistema:p.sistema,id:p.id,partida:p.nombre,unidad:m?m.unidad:'',meta:m?m.total:'',hoy:x.tipo==='cant'?x.cant:'',acumulado:acum,pct:pc,prog:prog,personal:perTxt(x.personal),totalPers:perTot(x.personal),incidencia:x.incidencia,obs:x.obs,reporte:rep,fotos:(x.fotos||[]).length,supervisor:x.supervisor,nueva:p.nueva?'Sí':'No'})})});
+  return r.sort((a,b)=>a.fecha<b.fecha?-1:1)}
+$('btnCfg').onclick=()=>{$('eN').textContent=myParts().length;$('eNew').textContent=state.nuevas.filter(p=>p.esp===state.user.disc).length;const pcts=acts(state.user.disc).map(pctOf);$('eAv').textContent=(pcts.length?Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length):0)+'%';$('supaUrl').value=state.cfg.supaUrl||'';$('supaKey').value=state.cfg.supaKey||'';$('cfgStatus').textContent=sbReady()?('Conectado a Supabase · pendientes por subir: '+pendingCount()):'Aún sin configurar.';openSheet('mExp')};
+function csvFrom(rows){const head=['Fecha','Disciplina','Cuadrilla','Sistema','ID','Partida','Unidad','Meta','Hoy','Acumulado','%','Programado%','Personal','TotalPersonal','Incidencia','Observacion','Reportabilidad','Fotos','Supervisor','Nueva'];const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';const L=[head.map(q).join(';')];rows.forEach(r=>L.push([r.fecha,r.disciplina,r.cuadrilla,r.sistema,r.id,r.partida,r.unidad,r.meta,r.hoy,r.acumulado,r.pct,r.prog,r.personal,r.totalPers,r.incidencia,r.obs,r.reporte,r.fotos,r.supervisor,r.nueva].map(q).join(';')));return '\uFEFF'+L.join('\r\n')}
+function buildCSV(){return csvFrom(rowsForExport())}
+function fname(){return 'parte_'+state.user.disc+'_'+todayISO()+'.csv'}
+$('eCsv').onclick=()=>{if(!myParts().length){toast('Aún no hay partes');return}const b=new Blob([buildCSV()],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fname();document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('CSV descargado ✓')};
+$('eShare').onclick=async()=>{if(!myParts().length){toast('Aún no hay partes');return}const csv=buildCSV();try{const file=new File([csv],fname(),{type:'text/csv'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Parte de obra'});return}}catch(e){}try{if(navigator.share){await navigator.share({title:'Parte de obra',text:csv});return}}catch(e){}$('eCsv').click()};
+$('eSave').onclick=()=>{const u=$('supaUrl').value.trim(),k=$('supaKey').value.trim();if(!/^https:\/\/.+\.supabase\.co\/?$/.test(u)){toast('URL de Supabase no válida');return}if(k.length<20){toast('Pega la anon key completa');return}state.cfg.supaUrl=u;state.cfg.supaKey=k;store.set(KC,state.cfg);closeSheet('mExp');toast('Guardado ✓');updSync();syncNow()};
+
+// ===== Supabase (offline-first) =====
+function uuid(){try{if(window.crypto&&crypto.randomUUID)return crypto.randomUUID()}catch(e){}return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16)})}
+function sbReady(){return !!(state.cfg.supaUrl&&state.cfg.supaKey)}
+function sbBase(){return state.cfg.supaUrl.replace(/\/+$/,'')}
+function sbHead(extra){return Object.assign({'apikey':state.cfg.supaKey,'Authorization':'Bearer '+state.cfg.supaKey,'Content-Type':'application/json'},extra||{})}
+async function sbUpsert(tabla,rows,onConflict){if(!rows.length)return;var url=sbBase()+'/rest/v1/'+tabla+(onConflict?('?on_conflict='+onConflict):'');var r=await fetch(url,{method:'POST',headers:sbHead({'Prefer':'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(rows)});if(!r.ok)throw new Error(tabla+' '+r.status)}
+async function sbSelect(tabla,qs){var url=sbBase()+'/rest/v1/'+tabla+'?'+qs;var r=await fetch(url,{headers:sbHead()});if(!r.ok)throw new Error(tabla+' '+r.status);return await r.json()}
+function pendingCount(){return state.partes.filter(function(p){return !p.synced}).length}
+async function syncPush(){var proyecto=DATA.proyecto;
+  var pend=state.partes.filter(function(p){return !p.synced});
+  if(pend.length){var rows=pend.map(function(p){return {client_id:p.client_id,proyecto:proyecto,disciplina:p.disc,supervisor:p.supervisor,cuadrilla:p.cuadrilla,sistema:p.sistema,partida_id:p.id,partida_nombre:p.nombre,fecha:p.fecha,tipo:p.tipo,cant:p.tipo==='cant'?p.cant:null,pct_glb:p.tipo==='glb'?p.pctGlb:null,personal:p.personal||[],incidencia:p.incidencia,obs:p.obs,fotos:(p.fotos||[]).length,ts:p.ts}});
+    await sbUpsert('partes',rows,'client_id');pend.forEach(function(p){p.synced=true});store.set(KP,state.partes)}
+  var mr=Object.keys(state.meta).map(function(id){return {partida_id:id,proyecto:proyecto,unidad:state.meta[id].unidad,total:state.meta[id].total}});
+  if(mr.length)await sbUpsert('metrados',mr,'proyecto,partida_id');
+  if(state.nuevas.length)await sbUpsert('nuevas',state.nuevas.map(function(n){return {partida_id:n.id,proyecto:proyecto,disciplina:n.esp,cuadrilla:n.cuadrilla,sistema:n.sistema,nombre:n.nombre}}),'proyecto,partida_id');
+  var rr=[];Object.keys(state.repo).forEach(function(id){(state.repo[id]||[]).forEach(function(x){rr.push({rid:String(x.ts),partida_id:id,proyecto:proyecto,cat:x.cat,texto:x.texto,fecha:x.fecha,ts:x.ts})})});
+  if(rr.length)await sbUpsert('reportabilidad',rr,'rid')}
+async function syncPull(){var pf='proyecto=eq.'+encodeURIComponent(DATA.proyecto);
+  var res=await Promise.all([sbSelect('partes','select=*&'+pf),sbSelect('metrados','select=*&'+pf),sbSelect('nuevas','select=*&'+pf),sbSelect('reportabilidad','select=*&'+pf)]);
+  var P=res[0],M=res[1],N=res[2],R=res[3];
+  var idx={};state.partes.forEach(function(p){idx[p.client_id]=p});
+  var map={};state.partes.filter(function(p){return !p.synced}).forEach(function(p){map[p.client_id]=p});
+  P.forEach(function(r){var prev=idx[r.client_id];map[r.client_id]={client_id:r.client_id,id:r.partida_id,nombre:r.partida_nombre,disc:r.disciplina,supervisor:r.supervisor,cuadrilla:r.cuadrilla,sistema:r.sistema,fecha:r.fecha,tipo:r.tipo,cant:r.cant==null?undefined:Number(r.cant),pctGlb:r.pct_glb==null?undefined:Number(r.pct_glb),personal:r.personal||[],incidencia:r.incidencia,obs:r.obs,fotos:(prev&&prev.fotos)?prev.fotos:[],ts:Number(r.ts),synced:true}});
+  state.partes=Object.keys(map).map(function(k){return map[k]});store.set(KP,state.partes);
+  var meta={};M.forEach(function(r){meta[r.partida_id]={unidad:r.unidad,total:Number(r.total)}});state.meta=meta;store.set(KM,state.meta);
+  state.nuevas=N.map(function(r){return {id:r.partida_id,nombre:r.nombre,esp:r.disciplina,cuadrilla:r.cuadrilla,sistema:r.sistema,inicio:'',fin:'',ini:0,plan:0,nueva:true}});store.set(KN,state.nuevas);
+  var repo={};R.forEach(function(r){(repo[r.partida_id]=repo[r.partida_id]||[]).push({cat:r.cat,texto:r.texto,fecha:r.fecha,ts:Number(r.ts)})});state.repo=repo;store.set(KR,state.repo)}
+var syncing=false;
+async function syncNow(silent){
+  if(!sbReady()){updSync();if(!silent)toast('Configura Supabase primero (engranaje)');return}
+  if(!navigator.onLine){updSync();if(!silent)toast('Sin conexión: se subirá al reconectar');return}
+  if(syncing)return;syncing=true;updSync('Sincronizando…');
+  try{await syncPush();await syncPull();state.cfg.lastSync=Date.now();store.set(KC,state.cfg);
+    if(!$('scrDiario').classList.contains('hidden'))renderDiario();
+    if(!$('scrList').classList.contains('hidden'))renderList();
+    if(!silent)toast('Sincronizado ✓')}
+  catch(e){if(!silent)toast('Error de sincronización')}
+  syncing=false;updSync()}
+function updSync(msg){var bar=$('syncBar');if(!bar)return;var dot=$('syncDot'),txt=$('syncTxt');var on=navigator.onLine,pend=pendingCount();
+  if(!sbReady()){dot.style.background='#9AA3B2';txt.textContent='Sin configurar (toca el engranaje)';return}
+  if(msg){dot.style.background='#E8821A';txt.textContent=msg;return}
+  if(!on){dot.style.background='#D8442F';txt.textContent='Sin conexión'+(pend?(' · '+pend+' por subir'):'');return}
+  dot.style.background='#1E9E75';var t='En línea';t+=pend?(' · '+pend+' por subir'):' · al día';
+  if(state.cfg.lastSync){var d=new Date(state.cfg.lastSync);t+=' · '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+  txt.textContent=t}
+
+// nav
+function openSheet(id){$(id).classList.add('open')}
+function closeSheet(id){$(id).classList.remove('open')}
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSheet(b.dataset.close));
+document.querySelectorAll('.sheet').forEach(s=>s.addEventListener('click',e=>{if(e.target===s)closeSheet(s.id)}));
+$('btnLogout').onclick=()=>{$('scrList').classList.add('hidden');$('scrDiario').classList.add('hidden');$('scrLogin').classList.remove('hidden');selDisc=state.user?state.user.disc:null;$('inSup').value=state.user?state.user.supervisor:'';buildDisc();chkEnter()};
+$('btnBack').onclick=backToDiario;
+$('btnDayLoad').onclick=()=>cargarDia(activeDate);
+$('btnDayRep').onclick=()=>reporteDia(activeDate);
+
+$('btnSync').onclick=()=>syncNow();
+window.addEventListener('online',()=>{updSync();syncNow(true)});
+window.addEventListener('offline',()=>updSync());
+// backfill: partes antiguos sin id de sincronización
+var _dirty=false;state.partes.forEach(function(p){if(!p.client_id){p.client_id=uuid();p.synced=false;_dirty=true}else if(p.synced===undefined){p.synced=false;_dirty=true}});if(_dirty)store.set(KP,state.partes);
+
+$('projName').textContent=DATA.proyecto;buildDisc();
+if(state.user){selDisc=state.user.disc;$('inSup').value=state.user.supervisor;enterApp()}
+</script>
+</body>
+</html>
