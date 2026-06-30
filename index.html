@@ -225,7 +225,7 @@
 #topSync .ti{display:inline-block;font-size:13px;line-height:1;animation:tsspin .9s linear infinite}
 
 </style>
-<script src="config.js?v=20260630c"></script>
+<script src="config.js?v=20260630d"></script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
 </head>
 <body>
@@ -554,6 +554,7 @@ function bakedRestrActive(p){if(!p||!p.restriccion)return false;if(!(p.estado&&/
 function nresOf(p){return ((state.repo[p.id]||[]).filter(function(x){return (x.cat==='int'||x.cat==='mina')&&!x.lev}).length)+(bakedRestrActive(p)?1:0)}
 function esCargada(p){var bp=DATA._byId&&DATA._byId[p.id];return !!(bp&&((bp.metrado>0)||bp.restriccion||(+bp.ini||0)>0))}
 function puedeMetrado(p){if(esAdmin())return true;if(esCargada(p))return false;var m=state.meta&&state.meta[p.id];if(m&&m.quien)return m.quien===((state.user&&state.user.supervisor));return true}
+function puedeModificar(p){if(esAdmin())return true;var m=state.meta&&state.meta[p.id];if(m&&m.quien)return m.quien===((state.user&&state.user.supervisor));return true}
 function restrTextos(id){var arr=((state.repo[id]||[]).filter(function(x){return (x.cat==='int'||x.cat==='mina')&&!x.lev})).map(function(x){return (x.cat==='mina'?'[Mina] ':'[Interna] ')+(x.texto||'')});var bp=DATA._byId&&DATA._byId[id];if(bp&&bakedRestrActive({id:id,restriccion:bp.restriccion,estado:bp.estado}))arr.push('[Cargada] '+bp.restriccion);return arr}
 function acumCant(id){return partesOf(id).filter(p=>p.tipo==='cant').reduce((a,p)=>a+(+p.cant||0),0)}
 function pctOf(p){const m=metaOf(p.id);if(m&&m.unidad==='glb'){const g=partesOf(p.id).filter(x=>x.tipo==='glb');return g.length?g[g.length-1].pctGlb:(p.ini||0)}if(m&&m.total>0){if(partesOf(p.id).length>0)return Math.min(100,Math.round(acumCant(p.id)/m.total*100));return p.ini||0}if(m)return p.ini||0;return p.ini||0}
@@ -773,7 +774,7 @@ async function sbSelect(tabla,qs){var url=sbBase()+'/rest/v1/'+tabla+'?'+qs;var 
 async function sbDelete(tabla,qs){var url=sbBase()+'/rest/v1/'+tabla+'?'+qs;var r=await fetch(url,{method:'DELETE',headers:sbHead({'Prefer':'return=minimal'})});if(!r.ok&&r.status!==404)throw new Error('del '+tabla+' '+r.status)}
 function pendingCount(){return state.partes.filter(function(p){return !p.synced}).length}
 /* === FIX anti-pérdida: subir solo lo cambiado + pausar sync al editar === */
-var APP_VER='v20260630c';try{var _av=document.getElementById('appVer');if(_av)_av.textContent='versión '+APP_VER}catch(_e){}
+var APP_VER='v20260630d';try{var _av=document.getElementById('appVer');if(_av)_av.textContent='versión '+APP_VER}catch(_e){}
 function _forceUpdate(){try{if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){try{r.update()}catch(e){}})})}if(window.caches){caches.keys().then(function(ks){return Promise.all(ks.map(function(k){return caches.delete(k)}))}).then(function(){location.reload()});return}}catch(e){}location.reload()}
 function delActividadAdmin(p){if(!p)return;try{if(typeof tombAdd==='function')tombAdd('partida',p.id);if(typeof tombShareAdd==='function')tombShareAdd('partida',p.id);if(typeof logCambio==='function')logCambio('BORRADO','partida:'+p.id,'Actividad eliminada: ['+((typeof codeOf==='function')?codeOf(p):p.id)+'] '+(p.nombre||'')+(p.sistema?(' \u00b7 '+p.sistema):''));}catch(e){}try{confirmEliminar(p)}catch(e){}try{if(!$('scrList').classList.contains('hidden'))renderList()}catch(e){}toast('Actividad eliminada y registrada')}
 function solicitarEliminar(p){if(!p)return;try{state.pend=state.pend||[];state.pend.push({id:uuid(),proyecto:DATA.proyecto,tipo:'elim',descripcion:'\ud83d\uddd1 Eliminar actividad ['+((typeof codeOf==='function')?codeOf(p):p.id)+'] '+(p.nombre||'')+(p.sistema?(' \u00b7 '+p.sistema):''),supervisor:(state.user&&state.user.supervisor)||'\u2014',disciplina:(state.user&&state.user.disc)||'',ts:Date.now(),fecha:todayISO(),fecha_necesita:'',critico:true,coments:[],estado_coment:'',estado_por:'',estado_ts:0,resuelto:false,synced:false});if(typeof pendSave==='function')pendSave();if(typeof syncNow==='function')syncNow(true)}catch(e){}toast('Solicitud de eliminación enviada al administrador')}
@@ -902,8 +903,8 @@ async function confirmReinicio(){if(!reinId)return;var quien=$('reinWho').value.
 $('reinDo').onclick=confirmReinicio;
 // === Menú de opciones por actividad (engranaje) ===
 var gearP=null;
-function openGear(p){gearP=p;$('gearName').textContent='['+codeOf(p)+'] '+(p.nombre||'');$('gearDelete').style.display='flex';try{var _gb=$('gearDelete').querySelector('b'),_gs=$('gearDelete').querySelector('small');if(typeof esAdmin==='function'&&esAdmin()){if(_gb)_gb.textContent='Eliminar actividad';if(_gs)_gs.textContent='Queda registrada como eliminada y se quita para todos'}else{if(_gb)_gb.textContent='Solicitar eliminación';if(_gs)_gs.textContent='Se envía al administrador para aprobar'}}catch(_e){}var pm=puedeMetrado(p);if($('gearEdit'))$('gearEdit').style.display=pm?'flex':'none';if($('gearReset'))$('gearReset').style.display=pm?'flex':'none';openSheet('mGear')}
-$('gearEdit').onclick=function(){var p=gearP;closeSheet('mGear');if(!p)return;if(!puedeMetrado(p)){toast('Solo quien definió el metrado o el administrador puede modificarlo');return}requireClave('Modificar '+codeOf(p),function(){openEditar(p)})};
+function openGear(p){gearP=p;$('gearName').textContent='['+codeOf(p)+'] '+(p.nombre||'');$('gearDelete').style.display='flex';try{var _gb=$('gearDelete').querySelector('b'),_gs=$('gearDelete').querySelector('small');if(typeof esAdmin==='function'&&esAdmin()){if(_gb)_gb.textContent='Eliminar actividad';if(_gs)_gs.textContent='Queda registrada como eliminada y se quita para todos'}else{if(_gb)_gb.textContent='Solicitar eliminación';if(_gs)_gs.textContent='Se envía al administrador para aprobar'}}catch(_e){}var pm=puedeMetrado(p);var pmod=puedeModificar(p);if($('gearEdit'))$('gearEdit').style.display=pmod?'flex':'none';if($('gearReset'))$('gearReset').style.display=pm?'flex':'none';openSheet('mGear')}
+$('gearEdit').onclick=function(){var p=gearP;closeSheet('mGear');if(!p)return;if(!puedeModificar(p)){toast('Solo quien la creó o el administrador puede modificarla');return}requireClave('Modificar '+codeOf(p),function(){openEditar(p)})};
 $('gearReset').onclick=function(){var p=gearP;closeSheet('mGear');if(!p)return;if(!puedeMetrado(p)){toast('Solo quien definió el metrado o el administrador puede restablecerlo');return}requireClave('Restablecer '+codeOf(p),function(){openReinicio(p)})};
 $('gearDelete').onclick=function(){var p=gearP;closeSheet('mGear');if(!p)return;if(typeof esAdmin==='function'&&esAdmin()){requireClave('Eliminar '+codeOf(p),function(){if(confirm('¿Eliminar la actividad ['+codeOf(p)+'] '+(p.nombre||'')+'? Queda registrada como eliminada y se quita para todos.'))delActividadAdmin(p)})}else{if(confirm('¿Enviar al administrador una solicitud para ELIMINAR ['+codeOf(p)+'] '+(p.nombre||'')+'?'))solicitarEliminar(p)}};
 async function confirmEliminar(p){var id=p.id,proyecto=DATA.proyecto;
