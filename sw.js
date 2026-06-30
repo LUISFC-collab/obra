@@ -1,11 +1,10 @@
 /* Service worker — Parte de obra (Water Transition II)
-   Hace que la app se guarde en el teléfono y abra SIN conexión (sin el dinosaurio).
-   - El "caparazón" (index.html, config.js, íconos) se guarda localmente.
-   - Cuando hay internet, baja la versión más nueva (network-first) y la guarda.
-   - Cuando NO hay internet, abre la versión guardada.
-   - Las llamadas a Supabase (otra dirección) NO se interceptan: la app ya maneja
-     el modo sin conexión guardando en el teléfono y subiendo al reconectar. */
-const CACHE = 'obra-v1';
+   Hace que la app se guarde en el teléfono y abra SIN conexión (sin el dinosaurio),
+   pero SIEMPRE trae la versión más nueva cuando hay internet (no se queda pegada).
+   - Con internet: baja del servidor sin usar la caché del navegador (cache:'reload').
+   - Sin internet: abre la versión guardada.
+   - Las llamadas a Supabase (otra dirección) NO se interceptan. */
+const CACHE = 'obra-v2';
 const SHELL = ['./', './index.html', './config.js', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -27,9 +26,10 @@ self.addEventListener('fetch', (e) => {
   let url;
   try { url = new URL(req.url); } catch (_) { return; }
   if (url.origin !== self.location.origin) return;  // Supabase u otros orígenes -> red normal
-  // Caparazón propio: red primero (para traer actualizaciones), caché si no hay internet
+  // Caparazón propio: SIEMPRE intenta la red fresca (sin caché del navegador) para traer
+  // actualizaciones; si no hay internet, usa la copia guardada.
   e.respondWith(
-    fetch(req)
+    fetch(req, { cache: 'reload' })
       .then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
